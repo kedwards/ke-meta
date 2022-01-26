@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  api:
+    image: ${IMAGE_NAME}:${IMAGE_VERSION}
+    build:
+      context: ../api
+    container_name: api
+    working_dir: /home/node/api/
+    ports:
+      - ${API_PORT}:${API_PORT}
+    environment:
+      PORT: ${API_PORT}
+    volumes:
+      - ../api:/home/node/api
+    command: npm start
+    networks:
+      - backend
+
+  web:
+    image: ${IMAGE_NAME}:${IMAGE_VERSION}
+    build:
+      context: ../web
+    container_name: web
+    working_dir: /home/node/web/
+    ports:
+      - ${WEB_PORT}:${WEB_PORT}
+    environment:
+      PORT: ${WEB_PORT}
+    volumes:
+      - ../web:/home/node/web
+    working_dir: /home/node/web/
+    command: npm start
+    networks:
+      - frontend
+
+networks:
+  backend:
+    external: true
+    name: ke-backend
+  frontend:
+    external: true
+    name: ke-frontend

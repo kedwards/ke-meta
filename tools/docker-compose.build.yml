@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  api-base: &api-base
+    image: ${IMAGE_NAME}:${IMAGE_VERSION}
+    volumes:
+      - ../api:/home/node/api
+      - ./scripts/api-init.sh:/home/node/api/api-init.sh
+    working_dir: /home/node/api/
+
+  api-init:
+    <<: *api-base
+    command: sh api-init.sh
+
+  api:
+    <<: *api-base
+    command: ${CMD}
+
+  web-base: &web-base
+    image: ${IMAGE_NAME}:${IMAGE_VERSION}
+    volumes:
+      - ../web:/home/node/web
+      - ./scripts/web-init.sh:/home/node/web/web-init.sh
+    working_dir: /home/node/web/
+
+  web-init:
+    <<: *web-base
+    command: sh web-init.sh ${CMD}
+
+  web:
+    <<: *web-base
+    command: ${CMD}
